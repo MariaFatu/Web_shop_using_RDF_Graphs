@@ -1,0 +1,37 @@
+@prefix : <http://maria.ro#> .
+
+:Aparate_DSLR a :Categorie .
+
+:Aparate_Mirrorless a :Categorie .
+
+:Obiective a :Categorie .
+
+:FujifilmXT3AparatFoto_1 a :Produs;
+  :Categorie :Aparate_Mirrorless;
+  :denumire "Fujifilm XT3 Aparat Foto";
+  :pret 1000 .
+
+:Canon5DMark4_1 a :Produs;
+  :Categorie :Aparate_DSLR;
+  :denumire "Canon EOS 5D Mark 4";
+  :pret 2700 .
+
+:SonyA7RII_1 a :Produs;
+  :Categorie :Aparate_Mirrorless;
+  :denumire "Sony A7 R II";
+  :pret 1700 .
+
+:Fujifilm18mm_1 a :Produs;
+  :Categorie :Obiective;
+  :denumire "Fujifilm 18mm";
+  :pret 850 .
+
+:Fujifilm23mm_1 a :Produs;
+  :Categorie :Obiective;
+  :denumire "Fujifilm 23mm";
+  :pret 600 .
+
+:obiectiv_3_1 a :Produs;
+  :Categorie :Obiective;
+  :denumire "obiectiv_3";
+  :pret 700 .

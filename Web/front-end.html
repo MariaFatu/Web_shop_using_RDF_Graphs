@@ -1,0 +1,147 @@
+<html>
+<head>
+    <link rel="stylesheet" href="stil.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <script>
+        var $curr_categ;
+        function getCateg()
+        {
+            document.getElementById('categorii').innerHTML='';
+            // console.log('ingetCateg');
+            $adresa = "back-end-select1.php";
+            $.get($adresa, procesareRaspunsSelect);
+        }
+
+        function procesareRaspunsSelect(raspuns)
+        { 
+            var categ = document.getElementById('categorii'); 
+            //console.log(raspuns);
+            raspuns.forEach(function callbackFn(categorie) { 
+                // console.log(categorie.id);
+                var obj = document.createElement('li');
+                const categ_id = categorie.id.split('#');
+                obj.onclick = function(){getProductsByCateg(categ_id[1])};
+                obj.innerText = categ_id[1];
+                categ.appendChild(obj);
+        });
+        }
+
+        function getProductsByCateg(categ_id)
+        {
+            // console.log('in_getProductsByCateg');
+            console.log(categ_id);
+            $curr_categ = categ_id;
+            document.getElementById('produse').innerHTML = "";
+            $adresa = `back-end-produsebycateg.php?id=${categ_id}`;
+            console.log($adresa);
+            $.get($adresa, procesareRaspunsProductsByCateg);
+        }
+
+        function procesareRaspunsProductsByCateg(raspuns)
+        {
+            console.log('in_procesareRaspunsProductsByCateg');
+            var produse = document.getElementById('produse');
+            raspuns.forEach(function callbackFn(produs) { 
+                console.log(produs.id);
+                
+                var deleteButton = document.createElement('button');
+                var prod = document.createElement('div');
+                var prodDetails = document.createElement('div');
+                var dButton = document.createElement('div');
+                var denumireLabel = document.createElement('label');
+                var pretLabel = document.createElement('label');
+                var categieLabel = document.createElement('label');
+                deleteButton.setAttribute('type','button');
+                prod.setAttribute('class', 'prod');
+                prodDetails.setAttribute('class', 'details');
+                dButton.setAttribute('class', 'produs-buttons');
+                denumireLabel.setAttribute('id','denumire');
+                pretLabel.setAttribute('id','pret');
+                
+                deleteButton.onclick = function(){
+                    //console.log(produs.id);
+                   deleteProdus(produs.id);
+                   
+                }
+                //console.log(produs.denumire);
+                denumireLabel.innerText = produs.denumire;
+                pretLabel.innerText = produs.pret;
+                deleteButton.innerText = 'Delete';
+                produse.appendChild(prod);
+                prod.appendChild(prodDetails);
+                prodDetails.appendChild(denumireLabel);
+                prodDetails.appendChild(pretLabel);
+                prod.appendChild(dButton);
+                dButton.appendChild(deleteButton);
+
+        });
+        }
+
+        function deleteProdus(prod_id)
+        {
+        
+            console.log("inDelete");   
+            const id = prod_id.split('#');  
+            $adresa = `back-end-delete.php?id=${id[1]}`; //pentru a transmite prin interpolare
+            console.log($adresa);
+            $.get($adresa, procesareRaspunsDelete);
+        }
+
+        function procesareRaspunsDelete(raspuns)
+         {
+            if (raspuns == 204)
+                getProductsByCateg($curr_categ);
+            else
+                console.log('eroare, nu a fost sters!'); 
+         }
+
+        function trimite()
+         {
+            console.log('inTrimite');
+            $adresa = "back-end.php";
+            $date = $("#formular").serializeArray();
+            $.post($adresa, $date, procesareRaspuns);
+            console.log($date);
+         }
+        
+        function procesareRaspuns(raspuns)
+         {
+            if (raspuns == 204)
+                console.log("Succes");
+            else
+            console.log('eroare'); 
+         }
+        
+    </script>
+
+<div class="flex-container">
+<div class="panel"> 
+ <ul class="header-panel">
+    <span style="border-style: solid; border-color: grey;" onclick="getCateg()">Categorii</span>
+ </ul>
+ <ul id="categorii">
+
+ </ul>
+</div>
+
+<div class="panel">
+    <div id="produse" border-color: grey;>
+
+    </div>
+</div>
+
+<div id="form">
+    <h2>Adaugare produs nou</h2>
+        <form id="formular">
+            <input placeholder="Denumire" type="text" id="denumire" name="denumire"><br>
+            <input placeholder="Pret" type="text" name="pret"><br>
+            <input placeholder="Categorie" type="text" name="categorie"><br>
+        
+        </form>
+        <button type="submit" onclick="trimite()">Trimite</button>
+</div>
+</div>
+</body>
+</html>
